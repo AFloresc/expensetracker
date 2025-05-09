@@ -1,8 +1,10 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -27,6 +29,11 @@ type ExpenseOperations interface {
 	SummaryExpenses() error
 	SummaryExpensesByMonth(month int) error
 	DeleteExpenseByID(id int) error
+}
+
+type TrackerOperations interface {
+	SaveTrackerToFile(filenaname string) error
+	HandleTrackerFile(fileName string, trackerJSON string) error
 }
 
 func (tracker *Tracker) AddExpense(e Expense) {
@@ -91,6 +98,49 @@ func (tracker *Tracker) DeleteExpenseByID(id int) error {
 	}
 
 	return err
+}
+
+func (tracker *Tracker) SaveTrackerToFile(fileName string) error {
+	// Tracker to JSON
+	data, err := json.MarshalIndent(tracker, "", " ")
+	if err != nil {
+		return fmt.Errorf("error parsing Event Tracker to JSON: %v", err)
+	}
+
+	// Create or write file
+	err = os.WriteFile(fileName, data, 0644)
+	if err != nil {
+		return fmt.Errorf("error writting to file: %v", err)
+	}
+
+	fmt.Println("Content saved to file.")
+	return nil
+}
+
+func (tracker *Tracker) HandleTrackerFile(fileName string, trackerJSON string) error {
+
+	// Check file exists
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+		// If not created, create it with JSON format
+		err := os.WriteFile(fileName, []byte(trackerJSON), 0644)
+		if err != nil {
+			return fmt.Errorf("error al crear el archivo: %v", err)
+		}
+		fmt.Println("JSON File created.")
+	} else {
+		// If created, load tracker content
+		data, err := os.ReadFile(fileName)
+		if err != nil {
+			return fmt.Errorf("error reading file: %v", err)
+		}
+		err = json.Unmarshal(data, &tracker)
+		if err != nil {
+			return fmt.Errorf("error unmarshalling file content: %v", err)
+		}
+		fmt.Println("Content file loaded.")
+	}
+
+	return nil
 }
 
 func remove(expense []Expense, index int) []Expense {
