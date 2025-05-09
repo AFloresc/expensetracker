@@ -37,6 +37,9 @@ type TrackerOperations interface {
 }
 
 func (tracker *Tracker) AddExpense(e Expense) {
+	if tracker.Counter == 0 {
+		tracker.Counter++
+	}
 	e.Id = tracker.Counter
 	e.CreatedAt = time.Now()
 	tracker.Expenses = append(tracker.Expenses, e)
@@ -49,7 +52,7 @@ func (tracker *Tracker) ListExpenses() (result []Expense, err error) {
 	if hasElements {
 		fmt.Println("ID   Date        Description            Amount")
 		for _, expense := range tracker.Expenses {
-			fmt.Printf("%d   %d-%d-%d        %s            %f\n", expense.Id, expense.Date.Day(), expense.Date.Month(), expense.Date.Year(), expense.Description, expense.Amount)
+			fmt.Printf("%d    %d-%d-%d    %s                  %.2f€\n", expense.Id, expense.Date.Day(), expense.Date.Month(), expense.Date.Year(), expense.Description, expense.Amount)
 		}
 	}
 	result = tracker.Expenses

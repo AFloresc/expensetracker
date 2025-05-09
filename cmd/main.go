@@ -14,13 +14,18 @@ func main() {
 		return
 	}
 
-	argument := strings.ToLower(argWithProg[1])
-	switch argument {
+	mainArgument := strings.ToLower(argWithProg[1])
+
+	switch mainArgument {
 	case "add":
 		fmt.Println("add received")
 	case "list":
 		fmt.Println("list received")
-
+	case "summary":
+		//Can have --month, --id argument or none
+		fmt.Println("list received")
+	case "delete":
+		fmt.Println("list received")
 	case "":
 		fmt.Println("no needed")
 
