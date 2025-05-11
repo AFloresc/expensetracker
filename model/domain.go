@@ -27,8 +27,8 @@ type ExpenseOperations interface {
 	AddExpense(e Expense)
 	ListExpenses() error
 	SummaryExpenses() error
-	SummaryExpensesByMonth(month int) error
-	DeleteExpenseByID(id int) error
+	SummaryExpensesByMonth(month int) (int64, error)
+	DeleteExpenseByID(id int) (int64, error)
 }
 
 type TrackerOperations interface {
@@ -59,33 +59,35 @@ func (tracker *Tracker) ListExpenses() (result []Expense, err error) {
 	return result, err
 }
 
-func (tracker *Tracker) SummaryExpenses() (err error) {
+func (tracker *Tracker) SummaryExpenses() (total float64, err error) {
 	hasElements, err := checkElements(*tracker)
+	var totalAmount float64 = 0
 	if hasElements {
-		var totalAmount float64 = 0
+
 		for _, expense := range tracker.Expenses {
 			totalAmount = totalAmount + expense.Amount
 		}
-		fmt.Println("Total Expenses: ", totalAmount)
+		fmt.Printf("Total Expenses: %.2f€\n", totalAmount)
 	}
-	return err
+	return totalAmount, err
 }
 
-func (tracker *Tracker) SummaryExpensesByMonth(month int) (err error) {
+func (tracker *Tracker) SummaryExpensesByMonth(month int) (total float64, err error) {
+	var totalAmount float64 = 0
 	if month < 1 || month > 12 {
-		return errors.New("not a valid month format")
+		return totalAmount, errors.New("not a valid month format")
 	}
 	hasElements, err := checkElements(*tracker)
 	if hasElements {
-		var totalAmount float64 = 0
+
 		for _, expense := range tracker.Expenses {
 			if expense.Date.Month() == time.Month(month) {
 				totalAmount = totalAmount + expense.Amount
 			}
 		}
-		fmt.Println("Total Expenses: ", totalAmount)
+		fmt.Printf("Total Expenses: %.2f€\n", totalAmount)
 	}
-	return err
+	return totalAmount, err
 }
 
 func (tracker *Tracker) DeleteExpenseByID(id int) error {

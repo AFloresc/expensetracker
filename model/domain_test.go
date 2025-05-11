@@ -33,7 +33,43 @@ func TestAddExpense(t *testing.T) {
 		assert := assert.New(t)
 
 		assert.Nil(err)
-		//assert.Equal(t, len(expenses), int(1))
+	})
+
+	t.Run("TestSummaryExpenses", func(t *testing.T) {
+		amount, err := tracker.SummaryExpenses()
+		assert := assert.New(t)
+
+		assert.Nil(err)
+		if amount != 15.00 {
+			t.Errorf("Expected %f, got %f", 15.00, amount)
+		}
+
+	})
+
+	t.Run("TestSummaryExpensesByMonth", func(t *testing.T) {
+		amount, err := tracker.SummaryExpensesByMonth(5)
+		assert := assert.New(t)
+
+		assert.Nil(err)
+		if amount != 15.00 {
+			t.Errorf("Expected %f, got %f", 15.00, amount)
+		}
+
+		amount, err = tracker.SummaryExpensesByMonth(2)
+		assert.Nil(err)
+		if amount != 0.00 {
+			t.Errorf("Expected %f, got %f", 0.00, amount)
+		}
+	})
+
+	t.Run("TestDeleteExpenseByID", func(t *testing.T) {
+		err := tracker.DeleteExpenseByID(1)
+		assert := assert.New(t)
+
+		assert.Nil(err)
+		if tracker.Elements != 0 {
+			t.Errorf("Expected %d, got %d", 0, tracker.Elements)
+		}
 
 	})
 }
