@@ -73,3 +73,31 @@ func TestAddExpense(t *testing.T) {
 
 	})
 }
+
+func TestHandleTrackerFile(t *testing.T) {
+	tracker := Tracker{}
+	expense := Expense{
+		Id:          0,
+		Date:        time.Now(),
+		Description: "Lunch",
+		Amount:      15,
+	}
+
+	expense2 := Expense{
+		Id:          0,
+		Date:        time.Now(),
+		Description: "Dinner",
+		Amount:      15,
+	}
+
+	tracker.AddExpense(expense)
+	tracker.AddExpense(expense2)
+	fmt.Println(tracker)
+
+	err := tracker.HandleTrackerFile("testfile.JSON", "")
+	assert := assert.New(t)
+	assert.Nil(err)
+
+	err = tracker.SaveTrackerToFile("testfile.JSON")
+	assert.Nil(err)
+}

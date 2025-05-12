@@ -129,7 +129,7 @@ func (tracker *Tracker) HandleTrackerFile(fileName string, trackerJSON string) e
 		// If not created, create it with JSON format
 		err := os.WriteFile(fileName, []byte(trackerJSON), 0644)
 		if err != nil {
-			return fmt.Errorf("error al crear el archivo: %v", err)
+			return fmt.Errorf("error creating file: %v", err)
 		}
 		fmt.Println("JSON File created.")
 	} else {
