@@ -4,6 +4,7 @@ import (
 	"expensetracker/model"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -32,12 +33,42 @@ func main() {
 	case "summary":
 		//Can have --month, --id argument or none
 		fmt.Println("list received")
+		summaryEvents(tracker, argWithProg)
 	case "delete":
 		fmt.Println("list received")
 	case "":
 		fmt.Println("no needed")
 
 	}
+}
+
+func summaryEvents(tracker model.Tracker, argWithProg []string) {
+	var totalAmount float64 = 0.00
+	if len(argWithProg) == 2 {
+		total, err := tracker.SummaryExpenses()
+		if err != nil {
+			fmt.Println(err)
+		}
+		totalAmount = total
+	}
+	if len(argWithProg) == 3 {
+		fmt.Println(fmt.Errorf("bad arguments").Error())
+	}
+	if len(argWithProg) == 4 {
+		if argWithProg[3] != "--month" {
+			fmt.Println(fmt.Errorf("bad arguments").Error())
+		}
+		month, err := strconv.Atoi(argWithProg[3])
+		if err != nil {
+			fmt.Println(err)
+		}
+		total, err := tracker.SummaryExpensesByMonth(month)
+		if err != nil {
+			fmt.Println(err)
+		}
+		totalAmount = total
+	}
+	fmt.Printf("Total Expenses: %.2f€\n", totalAmount)
 }
 
 func listEvents(tracker model.Tracker) {
@@ -61,4 +92,11 @@ func loadTrackerFromFile(fileName string) (model.Tracker, error) {
 		return tracker, err
 	}
 	return tracker, err
+}
+
+func validateArgs(argPos int, args []string) bool {
+	if len(args) < argPos+1 {
+		return false
+	}
+	return true
 }
