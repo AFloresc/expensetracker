@@ -6,9 +6,11 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const JSONFileName = "trackData.JON"
+const instructions = "Possible commands: \n - ?: Shows this help \n - summary: Shows the sum of all expenses\n - summary --month <month_number>: Shows the sum of al the expneses in selected month\n - delete --id <expense_id>: Deletes the selected expense with id\n - list: shows a list of all the expenses\n"
 
 func main() {
 	argWithProg := os.Args
@@ -27,19 +29,51 @@ func main() {
 	switch mainArgument {
 	case "add":
 		fmt.Println("add received")
+		addEvent(tracker, argWithProg)
 	case "list":
 		fmt.Println("list received")
 		listEvents(tracker)
 	case "summary":
-		//Can have --month, --id argument or none
+		// Can have --month argument
 		fmt.Println("list received")
 		summaryEvents(tracker, argWithProg)
 	case "delete":
+		// Must have --id argument
 		fmt.Println("list received")
 		deleteEvent(tracker, argWithProg)
+	case "?":
+		fmt.Print(instructions)
 	case "":
 		fmt.Println("no needed")
 
+	}
+}
+
+func addEvent(tracker model.Tracker, argWithProg []string) {
+	if len(argWithProg) != 6 {
+		fmt.Println(fmt.Errorf("bad arguments").Error())
+	}
+	if argWithProg[3] != "--description" {
+		fmt.Println(fmt.Errorf("bad arguments").Error())
+	}
+	if argWithProg[5] != "--amount" {
+		fmt.Println(fmt.Errorf("bad arguments").Error())
+	}
+
+	amount, err := strconv.ParseFloat(argWithProg[6], 32)
+	if err != nil {
+		fmt.Println(err)
+	}
+	expense := model.Expense{
+		Date:        time.Now(),
+		Description: argWithProg[4],
+		Amount:      amount,
+	}
+
+	tracker.AddExpense(expense)
+	err = tracker.SaveTrackerToFile(JSONFileName)
+	if err != nil {
+		fmt.Println(err)
 	}
 }
 
