@@ -36,9 +36,31 @@ func main() {
 		summaryEvents(tracker, argWithProg)
 	case "delete":
 		fmt.Println("list received")
+		deleteEvent(tracker, argWithProg)
 	case "":
 		fmt.Println("no needed")
 
+	}
+}
+
+func deleteEvent(tracker model.Tracker, argWithProg []string) {
+	if len(argWithProg) != 4 {
+		fmt.Println(fmt.Errorf("bad arguments").Error())
+	}
+	if argWithProg[3] != "--id" {
+		fmt.Println(fmt.Errorf("bad arguments").Error())
+	}
+	expenseid, err := strconv.Atoi(argWithProg[3])
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = tracker.DeleteExpenseByID(expenseid)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = tracker.SaveTrackerToFile(JSONFileName)
+	if err != nil {
+		fmt.Println(err)
 	}
 }
 
