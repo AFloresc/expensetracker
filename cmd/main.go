@@ -11,6 +11,7 @@ import (
 
 const JSONFileName = "trackData.JON"
 const instructions = "Possible commands: \n - ?: Shows this help \n - summary: Shows the sum of all expenses\n - summary --month <month_number>: Shows the sum of al the expneses in selected month\n - delete --id <expense_id>: Deletes the selected expense with id\n - list: shows a list of all the expenses\n"
+const version = "V. 0.1"
 
 func main() {
 	argWithProg := os.Args
@@ -43,8 +44,10 @@ func main() {
 		deleteEvent(tracker, argWithProg)
 	case "?":
 		fmt.Print(instructions)
+	case "version":
+		fmt.Println(version)
 	case "":
-		fmt.Println("no needed")
+		fmt.Print("BAd arguments \n" + instructions)
 
 	}
 }
