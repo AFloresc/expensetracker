@@ -67,7 +67,7 @@ func (tracker *Tracker) SummaryExpenses() (total float64, err error) {
 		for _, expense := range tracker.Expenses {
 			totalAmount = totalAmount + expense.Amount
 		}
-		fmt.Printf("Total Expenses: %.2f€\n", totalAmount)
+		//fmt.Printf("Total Expenses: %.2f€\n", totalAmount)
 	}
 	return totalAmount, err
 }

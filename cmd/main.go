@@ -62,6 +62,7 @@ func deleteEvent(tracker model.Tracker, argWithProg []string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println("Event deleted id: ", expenseid)
 }
 
 func summaryEvents(tracker model.Tracker, argWithProg []string) {
