@@ -48,13 +48,13 @@ func (tracker *Tracker) AddExpense(e Expense) {
 }
 
 func (tracker *Tracker) ListExpenses() (result []Expense, err error) {
-	hasElements, err := checkElements(*tracker)
-	if hasElements {
+	_, err = checkElements(*tracker)
+	/*if hasElements {
 		fmt.Println("ID   Date        Description            Amount")
 		for _, expense := range tracker.Expenses {
 			fmt.Printf("%d    %d-%d-%d    %s                  %.2f€\n", expense.Id, expense.Date.Day(), expense.Date.Month(), expense.Date.Year(), expense.Description, expense.Amount)
 		}
-	}
+	}*/
 	result = tracker.Expenses
 	return result, err
 }
